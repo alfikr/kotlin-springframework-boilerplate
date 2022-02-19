@@ -3,4 +3,10 @@ spring:
     web-application-type: reactive
 logging:
   level:
-    ROOT: trace
+    ROOT: ERROR
+    com.jasavast.kotlinspringboilerplate: DEBUG
+application:
+  token:
+    secret: ph7cedTMKjAtPUKlUoi5G3GS0o3aOKKIAJotQ/uog795dpYwj39J8bAivuvtyYmDnRBFp9D6o/xV0Nwo+ptHYA==
+    rememberMe: 3600
+    validation: 1800
