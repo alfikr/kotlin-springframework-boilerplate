@@ -1,8 +1,11 @@
 package com.jasavast.kotlinspringboilerplate.core.security
 
 import com.auth0.jwt.JWT
+import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.JWTCreationException
+import com.auth0.jwt.exceptions.JWTVerificationException
+import com.auth0.jwt.interfaces.DecodedJWT
 import com.jasavast.kotlinspringboilerplate.core.error.ClientStatusCode
 import com.jasavast.kotlinspringboilerplate.core.error.ErrorResponseException
 import org.springframework.beans.factory.annotation.Value
@@ -24,13 +27,17 @@ class TokenProvider(
     val validateToken: Long
 ) {
     lateinit var algorithm: Algorithm;
+    lateinit var verifier: JWTVerifier;
     var tokenValidityInMilliseconds by Delegates.notNull<Long>()
     var tokenValidityRememberMe by Delegates.notNull<Long>()
     private val AUTHORITIES_KEY = "auth"
+    private val ISSUER_KEY="system"
 
     init{
         val keyBytes:ByteArray=secretKey.toByteArray(Charset.defaultCharset())
         algorithm= Algorithm.HMAC256(keyBytes);
+        verifier=JWT.require(algorithm).withIssuer(ISSUER_KEY)
+            .acceptExpiresAt(5).acceptLeeway(1).build()
         tokenValidityInMilliseconds=1000*validateToken
         tokenValidityRememberMe=1000*rememberMeValidateToken
     }
@@ -47,7 +54,7 @@ class TokenProvider(
                 .map { obj: GrantedAuthority -> obj.authority }
                 .collect(Collectors.joining(","))
             val jwt:String=JWT.create()
-                .withIssuer(auth.principal.toString())
+                .withIssuer(ISSUER_KEY)
                 .withExpiresAt(validity)
                 .withSubject(auth.principal.toString())
                 .withPayload(mapOf(Pair(AUTHORITIES_KEY,authorities)))
@@ -60,7 +67,12 @@ class TokenProvider(
         return "";
     }
     fun validateToken(token:String):Boolean{
-        throw NotImplementedError()
+        return try{
+            val jwt:DecodedJWT=verifier.verify(token);
+            jwt.expiresAt.after(Date())
+        }catch (error: JWTVerificationException){
+            false;
+        }
     }
     fun getAuth(token:String):Authentication{
         throw NotImplementedError()
