@@ -9,8 +9,8 @@ abstract class ApiAbstract() {
     protected open var req:JSONObject?=null;
     protected  open var reqData:JSONObject?=null;
 
-    fun init(req: JSONObject, reqData:JSONObject){
+    fun init(req: JSONObject){
         this.req=req;
-        this.reqData=reqData;
+        this.reqData=req.getJSONObject("data");
     }
 }
