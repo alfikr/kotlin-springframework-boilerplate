@@ -6,7 +6,7 @@ import javax.annotation.Nullable
 import javax.validation.constraints.NotEmpty
 
 @Data
-class ReqVM(@NotEmpty final val method: String, @Nullable final val data: Object) {
+class ReqVM(@NotEmpty final val method: String, @Nullable final val data: Any) {
     fun getData():JSONObject{
         return JSONObject().put("method",method).put("data",data)
     }
