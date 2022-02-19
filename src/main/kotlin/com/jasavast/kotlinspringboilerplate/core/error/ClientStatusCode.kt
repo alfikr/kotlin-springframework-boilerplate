@@ -6,7 +6,8 @@ enum class ClientStatusCode(kode:String,type:String,description:String,httpStatu
     SUCCESS("success","success","Success",HttpStatus.OK),
     METHOD_NOT_FOUND("method_not_found",Constant.BUSINESS_ERROR,"method not found",HttpStatus.NOT_FOUND),
     OBJECT_NOT_FOUND("object_not_found",Constant.BUSINESS_ERROR,"object not found",HttpStatus.NOT_FOUND),
-    CREATE_JWT_ERROR("jwt_create_error","internal_app","Couldn't create token",HttpStatus.BAD_GATEWAY);
+    CREATE_JWT_ERROR("jwt_create_error","internal_app","Couldn't create token",HttpStatus.BAD_GATEWAY),
+    INVALID_JWT_TOKEN("invalid_jwt",Constant.BUSINESS_ERROR,"invalid jwt",HttpStatus.BAD_REQUEST);
     private object Constant {
         public final val BUSINESS_ERROR:String = "business_error"
     }
