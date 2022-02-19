@@ -91,6 +91,5 @@ class TokenProvider(
         }catch (error:JWTVerificationException){
             throw ErrorResponseException(ClientStatusCode.INVALID_JWT_TOKEN,"Token invalid");
         }
-        throw NotImplementedError()
     }
 }
