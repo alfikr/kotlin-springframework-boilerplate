@@ -3,4 +3,4 @@ package com.jasavast.kotlinspringboilerplate.core.annotations
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
 @Repeatable
-annotation class GetExecution(final val id:String)
+annotation class GetExecution(final val id:String="")

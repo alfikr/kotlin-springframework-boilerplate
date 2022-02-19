@@ -1,5 +1,6 @@
-package com.jasavast.kotlinspringboilerplate.core
+package com.jasavast.kotlinspringboilerplate.controller
 
+import com.jasavast.kotlinspringboilerplate.core.CoreApi
 import com.jasavast.kotlinspringboilerplate.controller.vm.ReqVM
 import com.jasavast.kotlinspringboilerplate.core.error.ClientStatusCode
 import com.jasavast.kotlinspringboilerplate.core.error.ErrorResponseException
@@ -16,9 +17,9 @@ import kotlin.reflect.full.isSuperclassOf
 
 @RestController
 @RequestMapping("/api/request")
-class CoreResources(private final val context: ApplicationContext){
+class CoreResources(private final val context: ApplicationContext) :CoreApi{
     @GetMapping("")
-    fun getResponse(request: ServerHttpRequest): Mono<JSONObject> {
+    override fun getResponse(request: ServerHttpRequest): Mono<JSONObject> {
         val req=validationRequestGet(request);
         var bean: Any = context.getBean(req.getString("beanName")) as Any;
         if(ApiAbstract::class.isSuperclassOf(bean::class)){
@@ -36,7 +37,7 @@ class CoreResources(private final val context: ApplicationContext){
     }
     @PostMapping("")
     @PutMapping("")
-    fun postResponse(@Valid request: ReqVM): Mono<JSONObject>{
+    override fun postResponse(@Valid request: ReqVM): Mono<JSONObject>{
 
         val method=request.method.split("\\.")
         require(method.size==2, lazyMessage = {
@@ -54,7 +55,7 @@ class CoreResources(private final val context: ApplicationContext){
         return Mono.empty();
     }
     @DeleteMapping("")
-    fun deleteResponse(request: ServerHttpRequest):Mono<JSONObject>{
+    override fun deleteResponse(request: ServerHttpRequest):Mono<JSONObject>{
         val req=validationRequestGet(request);
         var bean: Any = context.getBean(req.getString("beanName")) as Any;
         if(ApiAbstract::class.isSuperclassOf(bean::class)){
@@ -66,7 +67,7 @@ class CoreResources(private final val context: ApplicationContext){
         return Mono.empty();
     }
     @PutMapping("")
-    fun updateResponse(@Valid request: ReqVM):Mono<JSONObject>{
+    override fun updateResponse(@Valid request: ReqVM):Mono<JSONObject>{
         val method=request.method.split("\\.")
         if (method.size!=2){
             throw ErrorResponseException(ClientStatusCode.METHOD_NOT_FOUND,"invalid value method parameter")

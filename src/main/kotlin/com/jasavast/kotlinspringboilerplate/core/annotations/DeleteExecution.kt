@@ -4,4 +4,4 @@ package com.jasavast.kotlinspringboilerplate.core.annotations
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
 @Repeatable
-annotation class DeleteExecution(final val id:String )
+annotation class DeleteExecution(final val id:String ="")
